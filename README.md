@@ -97,7 +97,7 @@
 
 ## 公開URLと GitHub Pages の設定
 
-GitHub Pages（ルート）で公開すると、次の URL になります。
+GitHub Pages（main ブランチのルート）で公開します。
 
 ```
 https://coaching-l.github.io/the-wheel-of-life/
@@ -105,9 +105,9 @@ https://coaching-l.github.io/the-wheel-of-life/
 
 QR コードの画面は `https://coaching-l.github.io/the-wheel-of-life/qr.html` です。
 
-公開の手順：リポジトリの **Settings → Pages → Build and deployment** で、Source を「Deploy from a branch」にし、公開するブランチと `/ (root)` を選んで保存します。
+GitHub Pages の設定：リポジトリの **Settings → Pages → Build and deployment** で、Source を「Deploy from a branch」、Branch を `main` と `/ (root)` にしています。main に反映した内容は、数分でアプリにも反映されます。
 
-> このリポジトリが「非公開（Private）」の場合、GitHub Pages を使うには GitHub の有料プランが必要です。無料プランで使う場合は、問いカードと同じように「公開（Public）」に変更してください（このリポジトリには、個人情報や送信先は含まれていません）。
+> 無料プランで GitHub Pages を使うため、このリポジトリは問いカードと同じように「公開（Public）」にしています（個人情報や送信先は含まれていません）。
 
 ## QR コードを作り直す方法
 
