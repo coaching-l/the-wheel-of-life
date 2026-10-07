@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="8つの領域の「いま」と「理想」の点数から、自分の人生の輪を描いて、画像で保存できるワークシートです。">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="referrer" content="no-referrer">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f7f8fa" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#02172f" media="(prefers-color-scheme: dark)">
+  <title>人生の輪 | COACHING-L</title>
+  <link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="人生の輪">
+  <!-- ?v= は style.css・app.js を変えるたびに1つ上げる（ブラウザに古いファイルが残って、表示が崩れるのを防ぐ） -->
+  <link rel="stylesheet" href="style.css?v=1">
+</head>
+<body>
+  <div class="app">
+    <!-- ロゴ＋COACHING-L（問いカード・ポモドーロタイマーと同じ組み方） -->
+    <header class="brand-header">
+      <img class="brand-logo" src="icons/logo-144.png" width="52" height="52" alt="">
+      <div>
+        <p class="brand-name">COACHING-L</p>
+        <h1 class="app-title">人生の輪</h1>
+      </div>
+    </header>
+    <p class="intro"><span class="phrase">8つの領域の「いま」と「理想」を</span><span class="phrase">1〜10点で選んで、</span><span class="phrase">自分の人生の輪を描いてみましょう。</span></p>
+
+    <main>
+      <label class="field name-field">
+        <span class="field-label">お名前<span class="optional">任意</span></span>
+        <input type="text" class="text-input" id="name-input" placeholder="例：山田 花子" autocomplete="name" maxlength="30">
+        <span class="field-hint">保存する画像に入ります。入力した内容は、この端末の中にだけ保存されます（どこにも送信されません）。</span>
+      </label>
+
+      <!-- STEP 1：点数を選ぶ -->
+      <section class="step" id="rate" aria-labelledby="rate-heading">
+        <h2 class="step-title" id="rate-heading"><span class="step-num" aria-hidden="true">1</span>点数を選ぶ</h2>
+        <div class="mode-bar">
+          <div class="mode-switch" role="group" aria-label="選ぶ点数の種類">
+            <button type="button" class="mode-button" data-mode="now" aria-pressed="true">
+              <span class="mode-name">いまの点数</span><span class="mode-count" id="count-now"></span>
+            </button>
+            <button type="button" class="mode-button" data-mode="ideal" aria-pressed="false">
+              <span class="mode-name">理想の点数</span><span class="mode-count" id="count-ideal"></span>
+            </button>
+          </div>
+        </div>
+        <p class="mode-lead" id="mode-lead"></p>
+        <div class="items" id="items">
+          <!-- app.js が8つの領域を作ります -->
+        </div>
+        <div class="next-step" id="next-step" hidden>
+          <p class="next-step-text" id="next-step-text"></p>
+          <button type="button" class="sub-button" id="next-step-button"></button>
+        </div>
+      </section>
+
+      <!-- STEP 2：輪を見る -->
+      <section class="step" id="result" aria-labelledby="result-heading">
+        <h2 class="step-title" id="result-heading"><span class="step-num" aria-hidden="true">2</span>人生の輪を見る</h2>
+        <div class="panel result-panel">
+          <p class="progress" id="progress"></p>
+          <div class="chart" id="chart"></div>
+          <ul class="legend">
+            <li><span class="legend-now" aria-hidden="true"></span>塗りつぶし：いまの点数</li>
+            <li><span class="legend-ideal" aria-hidden="true"></span>点線：理想の点数</li>
+          </ul>
+          <p class="avg" id="avg"></p>
+        </div>
+        <div class="panel summary" id="summary" hidden>
+          <h3 class="summary-title">ひとことまとめ</h3>
+          <dl class="summary-list" id="summary-list"></dl>
+        </div>
+      </section>
+
+      <!-- STEP 3：振り返る -->
+      <section class="step" id="reflect" aria-labelledby="reflect-heading">
+        <h2 class="step-title" id="reflect-heading"><span class="step-num" aria-hidden="true">3</span>振り返る</h2>
+        <p class="step-lead">輪を眺めて、感じたことを書いてみましょう。書いた内容は、保存する画像にも入ります。</p>
+
+        <label class="field">
+          <span class="field-label">輪を見て、気づいたこと・感じたこと</span>
+          <textarea class="text-input text-area" id="note-insight" rows="3" maxlength="200" placeholder="例：仕事に比べて、遊び・余暇の時間がとれていないことに気づいた"></textarea>
+        </label>
+
+        <div class="field" role="group" aria-labelledby="focus-label" aria-describedby="focus-hint">
+          <p class="field-label" id="focus-label">いちばん変えたい領域</p>
+          <p class="field-hint field-hint-top" id="focus-hint">迷ったら、理想との差が大きい領域や、少し変わるだけで全体がよくなりそうな領域を選んでみましょう。</p>
+          <div class="focus-list" id="focus-list">
+            <!-- app.js がボタンを作ります -->
+          </div>
+          <div class="cards-link" id="cards-link" hidden>
+            <a class="sub-button cards-link-button" id="cards-link-button" href="#" target="_blank" rel="noopener"></a>
+            <p class="field-hint">その領域について考えを深める問いが出てきます（別のタブで開きます）。</p>
+          </div>
+        </div>
+
+        <label class="field">
+          <span class="field-label">その領域で、最初の一歩としてできること</span>
+          <textarea class="text-input text-area" id="note-step" rows="3" maxlength="200" placeholder="例：今週の土曜日に、1時間だけ好きなことをする時間をとる"></textarea>
+        </label>
+      </section>
+
+      <!-- STEP 4：保存する -->
+      <section class="step" id="save" aria-labelledby="save-heading">
+        <h2 class="step-title" id="save-heading"><span class="step-num" aria-hidden="true">4</span>画像で保存する</h2>
+        <button type="button" class="primary-button is-locked" id="download-button">画像をダウンロード</button>
+        <p class="msg" id="msg" role="status" aria-live="polite"></p>
+        <p class="save-note">人生の輪・ひとことまとめ・振り返りを1枚の画像にして、お使いの端末に保存します。</p>
+        <p class="save-note">入力した内容は、この端末の中に自動で保存され、画面を閉じても残ります。共有の端末で使ったときは、最後に「最初からやり直す」で消してください。</p>
+        <button type="button" class="reset-button" id="reset-button">最初からやり直す</button>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <p class="footer-brand">COACHING-L</p>
+      <p class="footer-note"><span class="phrase">点数に正解はありません。</span><span class="phrase">いまの自分の感覚を、</span><span class="phrase">そのまま大切にしてください。</span></p>
+    </footer>
+  </div>
+
+  <!-- アプリ内ブラウザ（LINE など）でダウンロードできないときに、画像を長押しで保存してもらうための画面 -->
+  <dialog class="preview" id="preview" aria-labelledby="preview-text">
+    <p class="preview-text" id="preview-text">画像を長押しして、「写真に保存」や「画像をダウンロード」を選んでください。</p>
+    <img class="preview-image" id="preview-image" alt="人生の輪の画像">
+    <button type="button" class="sub-button" id="preview-close">閉じる</button>
+  </dialog>
+
+  <script src="app.js?v=1"></script>
+</body>
+</html>

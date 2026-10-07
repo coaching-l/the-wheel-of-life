@@ -1,0 +1,999 @@
+/* COACHING-L 人生の輪
+   スマホ優先。外部フォントは使わず、端末のフォントで表示します。 */
+
+/* 色は COACHING-L の問いカード・ポモドーロタイマー（＝ホームページ coaching-l.net のブランドカラー）に合わせています。
+   紺 #042143 / 濃い紺 #02172f / 金 #c09e5c / 濃い金 #98783d / 背景 #f7f8fa / 文字 #293746
+   8つの領域の色（app.js の color）は、ブログの「人生の輪」ツール・問いカードとそろえています。 */
+:root {
+  --bg: #f7f8fa;
+  --surface: #ffffff;
+  --text: #293746;
+  --text-muted: #5f6d7c;
+  --heading: #042143;
+  --accent: #042143; /* 主なボタン・選んだ項目 */
+  --accent-strong: #02172f;
+  --accent-soft: #eaeef3;
+  --accent-contrast: #ffffff;
+  --gold: #c09e5c;
+  --gold-text: #8a6c34; /* 金色の文字（背景との差を確保した濃い金） */
+  --border: #d3dae2; /* ボタン・入力欄の枠 */
+  --line: #e0e5ea; /* 区切り線・パネルの枠 */
+  --focus-ring: #98783d;
+  --warn: #9c4a2a; /* 未選択のお知らせ */
+  --warn-soft: rgba(217, 119, 91, 0.12);
+
+  /* 点数ボタン */
+  --scale-bg: #eef1f5;
+  --scale-text: #5f6d7c;
+  --scale-on-text: #0b1f33; /* 選んだ点数の数字（どの領域の色の上でも読みやすい濃い紺） */
+
+  /* 輪のグラフ */
+  --grid: rgba(4, 33, 67, 0.12);
+  --grid-strong: rgba(4, 33, 67, 0.26);
+  --rim: rgba(4, 33, 67, 0.45);
+  --wedge-bg-opacity: 0.1;
+  --ideal: #042143;
+
+  --radius: 10px; /* パネル（ホームページと同じ） */
+  --radius-small: 8px; /* ボタン（ホームページと同じ） */
+  --radius-pill: 999px;
+  --shadow: 0 8px 24px rgba(2, 23, 47, 0.06);
+  --font: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Noto Sans JP", "Hiragino Sans",
+    "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Yu Gothic", "Meiryo", system-ui, sans-serif;
+
+  color-scheme: light dark;
+}
+
+/* ダークモード（端末の設定に合わせて自動で切り替え）。紺を背景にして、金を差し色にする */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #02172f;
+    --surface: #0a2945;
+    --text: #e9edf1;
+    --text-muted: #a8b4c2;
+    --heading: #f3f5f8;
+    --accent: #c09e5c;
+    --accent-strong: #d1b47a;
+    --accent-soft: #0f3152;
+    --accent-contrast: #02172f;
+    --gold: #c09e5c;
+    --gold-text: #d1b47a;
+    --border: #24476b;
+    --line: #1a3a5c;
+    --focus-ring: #c09e5c;
+    --warn: #f0a88f;
+    --warn-soft: rgba(217, 119, 91, 0.16);
+
+    --scale-bg: #0f3152;
+    --scale-text: #a8b4c2;
+
+    --grid: rgba(255, 255, 255, 0.12);
+    --grid-strong: rgba(255, 255, 255, 0.26);
+    --rim: rgba(255, 255, 255, 0.45);
+    --wedge-bg-opacity: 0.16;
+    --ideal: #f3f5f8;
+
+    --shadow: none;
+  }
+}
+
+/* ---------- 基本 ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+p,
+h1,
+h2,
+h3,
+dl,
+dd,
+ul {
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  touch-action: manipulation;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* 日本語の文節で改行させるためのまとまり */
+.phrase {
+  display: inline-block;
+}
+
+/* ---------- レイアウト ---------- */
+
+.app {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 560px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: max(28px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right))
+    max(16px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
+}
+
+main {
+  flex: 1;
+}
+
+/* ---------- ヘッダー：ロゴ＋COACHING-L ---------- */
+
+.brand-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-logo {
+  flex: none;
+  width: 52px;
+  height: 52px;
+}
+
+.brand-name {
+  color: var(--heading);
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0.14em;
+}
+
+.app-title {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+}
+
+.intro {
+  margin-top: 20px;
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+}
+
+/* ---------- 入力欄 ---------- */
+
+.field {
+  display: block;
+  margin-top: 20px;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--heading);
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.optional {
+  margin-left: 8px;
+  padding: 1px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-soft);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  vertical-align: 1px;
+}
+
+.field-hint {
+  display: block;
+  margin-top: 6px;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+.field-hint-top {
+  margin: -2px 0 10px;
+}
+
+.text-input {
+  display: block;
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-small);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 16px; /* 16px 未満だと、iPhone で入力時に画面が拡大されてしまう */
+  line-height: 1.5;
+}
+
+.text-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* 入力欄はタップでも常に枠が出るので、太い線ではなく、やわらかい縁取りにする */
+.text-input:focus {
+  border-color: var(--heading);
+  box-shadow: 0 0 0 3px rgba(192, 158, 92, 0.35);
+  outline: none;
+}
+
+.text-area {
+  min-height: 88px;
+  resize: vertical;
+}
+
+/* ---------- ステップ ---------- */
+
+.step {
+  margin-top: 40px;
+}
+
+.step-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--heading);
+  font-size: 1.1875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+}
+
+.step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: #ffffff;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.step-lead {
+  margin-top: 8px;
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+}
+
+.panel {
+  margin-top: 14px;
+  padding: 20px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+/* ---------- いま／理想の切り替え（スクロールしても上に残す） ---------- */
+
+.mode-bar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  margin: 10px -4px 0;
+  padding: max(8px, env(safe-area-inset-top)) 4px 8px;
+  background: var(--bg);
+}
+
+.mode-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  border-radius: calc(var(--radius-small) + 4px);
+  background: var(--accent-soft);
+}
+
+.mode-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0 8px;
+  min-height: 46px;
+  padding: 4px 8px;
+  border: 0;
+  border-radius: var(--radius-small);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.3;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.mode-button[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.mode-count {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.85;
+}
+
+.mode-lead {
+  margin-top: 6px;
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+}
+
+/* ---------- 8つの領域 ---------- */
+
+.items {
+  margin-top: 10px;
+}
+
+.item {
+  --c: var(--gold);
+  --c-soft: rgba(192, 158, 92, 0.22);
+  padding: 14px 0 16px;
+  border-top: 1px solid var(--line);
+  transition: background-color 0.3s ease;
+}
+
+.item.is-missing {
+  margin: 0 -10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-top-color: transparent;
+  border-radius: var(--radius-small);
+  background: var(--warn-soft);
+}
+
+.item-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.item-dot {
+  flex: none;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--c);
+}
+
+.item-name {
+  color: var(--heading);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.item-note {
+  display: inline-block;
+  margin-left: 2px;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+/* 領域の説明を開く「？」ボタン。見た目は小さく、押せる範囲は広くとる */
+.info-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1.5px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.info-button::before {
+  content: "";
+  position: absolute;
+  inset: -11px;
+}
+
+.info-button[aria-expanded="true"] {
+  border-color: var(--heading);
+  background: var(--heading);
+  color: var(--bg);
+}
+
+.item-score {
+  margin-left: auto;
+  padding-left: 8px;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.item-score.is-set {
+  color: var(--heading);
+  font-weight: 700;
+}
+
+.item-desc {
+  margin-top: 8px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--c);
+  border-radius: 0 var(--radius-small) var(--radius-small) 0;
+  background: var(--accent-soft);
+  color: var(--text);
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+.scale {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 5px;
+  margin-top: 10px;
+}
+
+/* もう一方の点数（「いま」または「理想」）の印を数字の下に出すぶん、余白をとる */
+.scale.has-mark {
+  padding-bottom: 16px;
+}
+
+.scale-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-small);
+  background: var(--scale-bg);
+  color: var(--scale-text);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.scale-button.is-fill {
+  background: var(--c-soft);
+  color: var(--text);
+}
+
+.scale-button.is-on {
+  background: var(--c);
+  color: var(--scale-on-text);
+  font-weight: 800;
+}
+
+.scale-button:active {
+  transform: scale(0.92);
+}
+
+@media (hover: hover) {
+  .scale-button:not(.is-on):not(.is-fill):hover {
+    background: var(--line);
+    color: var(--text);
+  }
+}
+
+/* 「理想」を選んでいるときの「いま」の印（逆も同じ） */
+.scale-button[data-mark]::after {
+  content: attr(data-mark);
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-top: 1px;
+  transform: translateX(-50%);
+  color: var(--text-muted);
+  font-size: 0.625rem;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+/* 次にすること（理想の点数へ進む など） */
+.next-step {
+  margin-top: 6px;
+  padding: 16px;
+  border-radius: var(--radius-small);
+  background: var(--accent-soft);
+  text-align: center;
+}
+
+.next-step-text {
+  font-size: 0.9375rem;
+}
+
+.next-step .sub-button {
+  margin-top: 10px;
+}
+
+/* ---------- ボタン ---------- */
+
+.primary-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 56px;
+  margin-top: 14px;
+  padding: 0 24px;
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-small);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+  cursor: pointer;
+  transition: background-color 0.15s ease, opacity 0.2s ease, transform 0.08s ease;
+}
+
+.primary-button:hover {
+  background: var(--accent-strong);
+}
+
+.primary-button:active {
+  transform: scale(0.98);
+}
+
+.primary-button.is-locked {
+  opacity: 0.45;
+}
+
+.sub-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 8px 20px;
+  border: 1.5px solid var(--heading);
+  border-radius: var(--radius-small);
+  background: var(--surface);
+  color: var(--heading);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.sub-button:hover {
+  background: var(--accent-soft);
+}
+
+.reset-button {
+  display: block;
+  margin: 22px auto 0;
+  padding: 8px 12px;
+  border: 0;
+  background: none;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* ---------- 輪のグラフ ---------- */
+
+.result-panel {
+  padding: 16px 6px 18px;
+}
+
+.progress {
+  min-height: 1.6em;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 500px;
+  margin: 4px auto 0;
+  overflow: visible;
+}
+
+.chart text {
+  font-family: var(--font);
+  letter-spacing: 0;
+}
+
+.wedge-bg {
+  fill-opacity: var(--wedge-bg-opacity);
+}
+
+.wedge {
+  opacity: 0.88;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.grid {
+  fill: none;
+  stroke: var(--grid);
+  stroke-width: 1;
+}
+
+.grid-mid {
+  stroke: var(--grid-strong);
+}
+
+.rim {
+  fill: none;
+  stroke: var(--rim);
+  stroke-width: 1.5;
+}
+
+.ideal-line {
+  fill: none;
+  stroke: var(--ideal);
+  stroke-width: 2.5;
+  stroke-dasharray: 6 4;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.lbl {
+  fill: var(--heading);
+  font-weight: 600;
+  dominant-baseline: central;
+}
+
+.lbl-note {
+  fill: var(--text-muted);
+  font-weight: 400;
+}
+
+.lbl-score {
+  font-weight: 800;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 18px;
+  margin-top: 8px;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+}
+
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-now {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: conic-gradient(#D9775B 0 12.5%, #DE9F4E 0 25%, #BFAE45 0 37.5%, #7EA26A 0 50%,
+    #4E9993 0 62.5%, #5A85B7 0 75%, #8B76B4 0 87.5%, #C06C99 0);
+}
+
+.legend-ideal {
+  width: 22px;
+  border-top: 2.5px dashed var(--ideal);
+}
+
+.avg {
+  min-height: 1.6em;
+  margin-top: 8px;
+  color: var(--heading);
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ---------- ひとことまとめ ---------- */
+
+.summary-title {
+  color: var(--gold-text);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.summary-list {
+  margin-top: 8px;
+}
+
+.summary-row {
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+
+.summary-row:first-child {
+  border-top: 0;
+  padding-top: 2px;
+}
+
+.summary-row dt {
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+}
+
+.summary-row dd {
+  color: var(--heading);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.summary-score {
+  margin-left: 4px;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* ---------- いちばん変えたい領域 ---------- */
+
+.focus-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.focus-button {
+  --c: var(--gold);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 6px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-small);
+  background: var(--surface);
+  color: var(--heading);
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.focus-button::before {
+  content: "";
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--c);
+}
+
+.focus-button:hover {
+  border-color: var(--heading);
+}
+
+.focus-button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+/* 選んだボタンの上でも色の印が埋もれないよう、縁取りを付ける */
+.focus-button[aria-pressed="true"]::before {
+  box-shadow: 0 0 0 2px var(--accent-contrast);
+}
+
+.cards-link {
+  margin-top: 12px;
+}
+
+.cards-link-button {
+  width: 100%;
+}
+
+/* ---------- 保存 ---------- */
+
+.msg {
+  min-height: 1.6em;
+  margin-top: 10px;
+  color: var(--warn);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.msg.is-ok {
+  color: var(--heading);
+}
+
+.save-note {
+  margin-top: 6px;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+/* ---------- 画像の表示（長押しで保存） ---------- */
+
+.preview {
+  width: min(92vw, 520px);
+  max-height: 92vh;
+  max-height: 92dvh;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  text-align: center;
+  overflow: auto;
+}
+
+.preview::backdrop {
+  background: rgba(2, 23, 47, 0.6);
+}
+
+.preview-text {
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.preview-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 12px 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-small);
+}
+
+/* ---------- フッター ---------- */
+
+.app-footer {
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.footer-brand {
+  color: var(--heading);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.footer-note {
+  margin-top: 4px;
+  font-size: 0.8125rem;
+}
+
+/* ---------- 狭い画面 ---------- */
+
+@media (max-width: 380px) {
+  .app {
+    padding-left: max(14px, env(safe-area-inset-left));
+    padding-right: max(14px, env(safe-area-inset-right));
+  }
+
+  .scale {
+    gap: 3px;
+  }
+
+  .scale-button {
+    height: 40px;
+    font-size: 0.875rem;
+    border-radius: 6px;
+  }
+
+  .result-panel {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* 拡大表示などで幅 300px 未満になったときは1列にする */
+@media (max-width: 299px) {
+  .focus-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- 大きめの画面 ---------- */
+
+@media (min-width: 600px) {
+  .app {
+    padding-top: 56px;
+  }
+
+  .panel {
+    padding: 24px;
+  }
+
+  .result-panel {
+    padding: 20px 12px 22px;
+  }
+}
+
+/* Windows のハイコントラスト表示では色が置き換わるため、領域の色の印はそのまま残す */
+@media (forced-colors: active) {
+  .item-dot,
+  .focus-button::before,
+  .legend-now {
+    forced-color-adjust: none;
+  }
+
+  .scale-button.is-on,
+  .mode-button[aria-pressed="true"],
+  .focus-button[aria-pressed="true"] {
+    outline: 2px solid Highlight;
+    outline-offset: -4px;
+  }
+}
+
+/* ---------- 動きを減らす設定 ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .wedge,
+  .scale-button,
+  .mode-button,
+  .focus-button,
+  .primary-button,
+  .item {
+    transition: none !important;
+  }
+}

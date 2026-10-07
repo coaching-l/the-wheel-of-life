@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>人生の輪 QRコード | COACHING-L</title>
+  <link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+  <!-- 研修でプロジェクターに映す、参加者用の QR コードの画面。いつも明るい配色で表示します -->
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      color: #293746;
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Noto Sans JP", "Hiragino Sans",
+        "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Yu Gothic", "Meiryo", system-ui, sans-serif;
+      text-align: center;
+    }
+    main { padding: 4vh 24px; }
+    .brand { display: inline-flex; align-items: center; gap: 12px; }
+    .brand img { width: 6vh; height: 6vh; min-width: 40px; min-height: 40px; }
+    .brand p { margin: 0; color: #042143; font-size: max(18px, 2.6vh); font-weight: 700; letter-spacing: 0.14em; }
+    h1 { margin: 1.6vh 0 0; color: #042143; font-size: max(28px, 5.4vh); letter-spacing: 0.08em; }
+    .qr { display: block; width: min(56vh, 80vw); height: auto; margin: 3vh auto 2vh; image-rendering: pixelated; }
+    .lead { margin: 0; font-size: max(16px, 2.8vh); font-weight: 700; }
+    .url { margin: 1vh 0 0; color: #5f6d7c; font-size: max(14px, 2vh); letter-spacing: 0.02em; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="brand">
+      <img src="icons/logo-144.png" alt="">
+      <p>COACHING-L</p>
+    </div>
+    <h1>人生の輪</h1>
+    <img class="qr" src="qr.png" width="900" height="900" alt="人生の輪のページを開く QR コード">
+    <p class="lead">スマホのカメラで読み取って、ページを開いてください</p>
+    <p class="url">coaching-l.github.io/the-wheel-of-life/</p>
+  </main>
+</body>
+</html>
