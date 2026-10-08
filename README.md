@@ -24,7 +24,7 @@
 | 人生の輪 | いまの点数を塗りつぶし、理想の点数を点線で重ねて描きます。各領域の横に「いま → 理想」の点数を表示します |
 | ひとことまとめ | いちばん高い領域・いちばん低い領域・理想との差がいちばん大きい領域を、自動で表示します（同じ点数の領域が複数あるときは、すべて表示） |
 | 振り返り | 「気づいたこと・感じたこと」「いちばん変えたい領域」「最初の一歩」を書けます（各200字まで）。書いた内容は保存する画像にも入ります |
-| 問いカードへのボタン | 「いちばん変えたい領域」を選ぶと、その領域の[問いカード](https://coaching-l.github.io/reflection-cards/)を別のタブで開けます（`?cat=` でカテゴリを指定） |
+| 問いカードへのボタン | 「いちばん変えたい領域」を選ぶと、その領域の[問いカード](https://tools.coaching-l.net/reflection-cards/)を別のタブで開けます（`?cat=` でカテゴリを指定） |
 | 自動保存 | 入力した内容は、その端末のブラウザに自動で保存されます。研修中に別のアプリを開いて戻ったり、画面を閉じたりしても消えません |
 | 領域の説明 | 各領域の名前の横の「?」で、その領域に含まれるものの短い説明を開けます |
 | 画像をダウンロード | いまの点数がそろうと押せるようになります（理想の点数と振り返りは任意） |
@@ -100,10 +100,10 @@
 GitHub Pages（main ブランチのルート）で公開します。
 
 ```
-https://coaching-l.github.io/the-wheel-of-life/
+https://tools.coaching-l.net/the-wheel-of-life/
 ```
 
-QR コードの画面は `https://coaching-l.github.io/the-wheel-of-life/qr.html` です。
+QR コードの画面は `https://tools.coaching-l.net/the-wheel-of-life/qr.html` です。
 
 GitHub Pages の設定：リポジトリの **Settings → Pages → Build and deployment** で、Source を「Deploy from a branch」、Branch を `main` と `/ (root)` にしています。main に反映した内容は、数分でアプリにも反映されます。
 
@@ -116,7 +116,7 @@ GitHub Pages の設定：リポジトリの **Settings → Pages → Build and d
 
 ```
 pip install segno
-python3 -c "import segno; segno.make('https://coaching-l.github.io/the-wheel-of-life/?openExternalBrowser=1', error='m').save('qr.png', scale=20, border=4, dark='#042143')"
+python3 -c "import segno; segno.make('https://tools.coaching-l.net/the-wheel-of-life/?openExternalBrowser=1', error='m').save('qr.png', scale=20, border=4, dark='#042143')"
 ```
 
 `qr.html` の下に表示している URL の文字も、あわせて書き換えてください。
