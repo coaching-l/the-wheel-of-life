@@ -6,7 +6,7 @@
   /* ===== 設定（領域の名前や説明を変えるときは、ここを書き換えます）===== */
   var SETTINGS = {
     // 問いカードの公開URL（「いちばん変えたい領域」の問いカードを開くボタンで使います）
-    cardsUrl: "https://coaching-l.github.io/reflection-cards/",
+    cardsUrl: "https://tools.coaching-l.net/reflection-cards/",
     // 8つの領域（輪の真上から時計回りの順）
     //   name：名前　note：補足（画面では小さく表示）　cat：問いカードの ?cat= に使うID
     //   color：色（ブログの「人生の輪」ツール・問いカードと同じ）　desc：「？」で開く説明
